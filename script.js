@@ -190,6 +190,7 @@ window.addEventListener('load', () => {
                         slideRect.y,
                         slideRect.width,
                         slideRect.height,
+                        0
                     );
                     ctx.clip();
 
@@ -216,7 +217,6 @@ window.addEventListener('load', () => {
             texture.needsUpdate = true;
         }
 
-        let currentScroll = 0;
         lenis.on("scroll", ({ scroll, limit, velocity, direction, progress }) => {
             lastScrollPos = scroll / limit;
 
