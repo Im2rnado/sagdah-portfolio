@@ -25,9 +25,7 @@ window.addEventListener('load', () => {
 
     function updateCameraForMobile() {
         if (window.innerWidth < 768) {
-            camera.position.z *= 1.5; // Move camera back
-            camera.position.y *= 0.8; // Adjust height
-            parentMesh.scale.set(0.8, 0.8, 0.8); // Scale down mesh
+            eruda.init();
         }
     }
 
