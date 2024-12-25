@@ -3,8 +3,8 @@ window.addEventListener('load', () => {
         duration: 2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
-        wheelMultiplier: 1.2,
-        touchMultiplier: 1.2,
+        wheelMultiplier: window.innerWidth < 768 ? 1.5 : 1.2,
+        touchMultiplier: window.innerWidth < 768 ? 1.7 : 1.2,
         smooth: true,
         smoothTouch: true,
         lerp: 0.1
@@ -53,7 +53,7 @@ window.addEventListener('load', () => {
     function initializeScene() {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
-            window.innerWidth < 768 ? 60 : 45,
+            window.innerWidth < 768 ? 55 : 45,
             window.innerWidth / window.innerHeight,
             0.1,
             1000
