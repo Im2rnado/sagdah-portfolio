@@ -21,7 +21,8 @@ p {
 }
 
 p#logo {
-    font-weight: bold;
+    font-family: 'Dahlia';
+    font-size: 40px;
     opacity: 1;
 }
 
@@ -34,6 +35,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     z-index: 20;
+    margin-top: -20px;
 }
 
 .nav-links {
@@ -128,7 +130,7 @@ canvas {
     }
 
     p#logo {
-        font-size: 30px;
+        font-size: 32px;
     }
 
     footer {
