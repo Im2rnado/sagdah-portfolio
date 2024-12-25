@@ -23,6 +23,14 @@ window.addEventListener('load', () => {
     let images = [];
     let loadedImageCount = 0;
 
+    function updateCameraForMobile() {
+        if (window.innerWidth < 768) {
+            camera.position.z *= 1.5; // Move camera back
+            camera.position.y *= 0.8; // Adjust height
+            parentMesh.scale.set(0.8, 0.8, 0.8); // Scale down mesh
+        }
+    }
+
     function loadImages() {
         for (let i = 1; i <= 7; i++) {
             const img = new Image();
@@ -53,7 +61,7 @@ window.addEventListener('load', () => {
     function initializeScene() {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
-            45,
+            window.innerWidth < 768 ? 60 : 45,
             window.innerWidth / window.innerHeight,
             0.1,
             1000
@@ -70,9 +78,9 @@ window.addEventListener('load', () => {
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setClearColor(0x000000);
 
-        const parentWidth = 20;
-        const parentHeight = 75;
-        const curvature = 35;
+        const parentWidth = window.innerWidth < 768 ? 10 : 20;
+        const parentHeight = window.innerWidth < 768 ? 37.5 : 75;
+        const curvature = window.innerWidth < 768 ? 25 : 35;
         const segmentsX = 200;
         const segmentsY = 200;
 
@@ -113,7 +121,7 @@ window.addEventListener('load', () => {
         });
 
         const parentMesh = new THREE.Mesh(parentGeometry, parentMaterial);
-        parentMesh.position.set(0, 0, 0);
+        parentMesh.position.set(0, -1, 0);
         parentMesh.rotation.x = THREE.MathUtils.degToRad(-20);
         parentMesh.rotation.y = THREE.MathUtils.degToRad(20);
         scene.add(parentMesh);
@@ -238,6 +246,7 @@ window.addEventListener('load', () => {
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                updateCameraForMobile();
             }, 250);
         });
 

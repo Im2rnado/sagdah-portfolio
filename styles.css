@@ -21,6 +21,7 @@ p {
 }
 
 p#logo {
+    font-weight: bold;
     opacity: 1;
 }
 
@@ -32,7 +33,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 2;
+    z-index: 20;
 }
 
 .nav-links {
@@ -49,7 +50,7 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 2;
+    z-index: 20;
 }
 
 .slider-wrapper {
@@ -65,6 +66,7 @@ canvas {
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;
 }
 
 .overlay {
@@ -74,12 +76,10 @@ canvas {
     width: 100vw;
     height: 100vh;
     background: #000;
-    background: radial-gradient(
-        circle,
-        rgba(0, 0, 0, 0) 75%,
-        rgba(0, 0, 0, 0.5) 100%
-    );
-    z-index: 1;
+    background: radial-gradient(circle,
+            rgba(0, 0, 0, 0) 75%,
+            rgba(0, 0, 0, 0.5) 100%);
+    z-index: 5;
 }
 
 .shadow-overlay {
@@ -110,4 +110,38 @@ canvas {
 @font-face {
     font-family: 'Dahlia';
     src: url('./fonts/dahlia-medium.woff2');
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        padding: 1.5em;
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    .nav-links {
+        gap: 1em;
+    }
+
+    p {
+        font-size: 15px;
+    }
+
+    p#logo {
+        font-size: 30px;
+    }
+
+    footer {
+        padding: 1.5em;
+    }
+
+    .shadow-overlay {
+        height: 50vh;
+    }
+
+    .overlay {
+        background: radial-gradient(circle,
+                rgba(0, 0, 0, 0) 65%,
+                rgba(0, 0, 0, 0.6) 100%);
+    }
 }
