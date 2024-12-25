@@ -1,24 +1,28 @@
 window.addEventListener('load', () => {
-    const lenis = new Lenis({
-        duration: 2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        wheelMultiplier: window.innerWidth < 768 ? 1.5 : 1.2,
-        touchMultiplier: window.innerWidth < 768 ? 0 : 1.2,
-        smooth: true,
-        smoothTouch: true,
-        lerp: 0.1
-    });
+    let lenis;
+    const isMobile = window.innerWidth < 768;
 
+    if (!isMobile) {
+        lenis = new Lenis({
+            duration: 2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 1.2,
+            touchMultiplier: 1.2,
+            smooth: true,
+            smoothTouch: false,
+            lerp: 0.1
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
 
     let lastScrollPos = 0;
     let ticking = false;
-
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
 
     let images = [];
     let loadedImageCount = 0;
@@ -53,7 +57,7 @@ window.addEventListener('load', () => {
     function initializeScene() {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
-            window.innerWidth < 768 ? 55 : 45,
+            isMobile ? 55 : 45,
             window.innerWidth / window.innerHeight,
             0.1,
             1000
@@ -70,9 +74,9 @@ window.addEventListener('load', () => {
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setClearColor(0x000000);
 
-        const parentWidth = window.innerWidth < 768 ? 10 : 20;
-        const parentHeight = window.innerWidth < 768 ? 37.5 : 75;
-        const curvature = window.innerWidth < 768 ? 25 : 35;
+        const parentWidth = isMobile ? 10 : 20;
+        const parentHeight = isMobile ? 37.5 : 75;
+        const curvature = isMobile ? 25 : 35;
         const segmentsX = 200;
         const segmentsY = 200;
 
@@ -217,18 +221,33 @@ window.addEventListener('load', () => {
             texture.needsUpdate = true;
         }
 
-        lenis.on("scroll", ({ scroll, limit, velocity, direction, progress }) => {
-            lastScrollPos = scroll / limit;
+        if (isMobile) {
+            window.addEventListener("scroll", () => {
+                lastScrollPos = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
 
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    updateTexture(-lastScrollPos);
-                    renderer.render(scene, camera);
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateTexture(-lastScrollPos);
+                        renderer.render(scene, camera);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        } else {
+            lenis.on("scroll", ({ scroll, limit }) => {
+                lastScrollPos = scroll / limit;
+
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateTexture(-lastScrollPos);
+                        renderer.render(scene, camera);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
 
         let resizeTimeout;
         window.addEventListener("resize", () => {
