@@ -23,12 +23,6 @@ window.addEventListener('load', () => {
     let images = [];
     let loadedImageCount = 0;
 
-    function updateCameraForMobile() {
-        if (window.innerWidth < 768) {
-            eruda.init();
-        }
-    }
-
     function loadImages() {
         for (let i = 1; i <= 7; i++) {
             const img = new Image();
@@ -244,7 +238,6 @@ window.addEventListener('load', () => {
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                updateCameraForMobile();
             }, 250);
         });
 
