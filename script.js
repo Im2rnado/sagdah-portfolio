@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         wheelMultiplier: window.innerWidth < 768 ? 1.5 : 1.2,
-        touchMultiplier: window.innerWidth < 768 ? 1.7 : 1.2,
+        touchMultiplier: window.innerWidth < 768 ? 0 : 1.2,
         smooth: true,
         smoothTouch: true,
         lerp: 0.1
