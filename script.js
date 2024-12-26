@@ -170,7 +170,7 @@ window.addEventListener('load', () => {
 
                 const img = images[slideNumber - 1];
                 if (img) {
-                    console.log(`Image ${slideNumber} dimensions:`, img.width, img.height); // Debug dimensions
+                    console.log(`Image ${slideNumber} dimensions:`, img.width, img.height);
                     const imgAspect = img.width / img.height;
                     const rectAspect = slideRect.width / slideRect.height;
 
@@ -223,12 +223,15 @@ window.addEventListener('load', () => {
 
         if (isMobile) {
             window.addEventListener("scroll", () => {
-                lastScrollPos = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+                const scrollOffset = Math.max(0, window.scrollY - window.innerHeight); // Subtract 100vh
+                lastScrollPos = scrollOffset / ((document.documentElement.scrollHeight - window.innerHeight * 2));
 
                 if (!ticking) {
                     requestAnimationFrame(() => {
-                        updateTexture(-lastScrollPos);
-                        renderer.render(scene, camera);
+                        if (window.scrollY > window.innerHeight) { // Only render after 100vh
+                            updateTexture(-lastScrollPos);
+                            renderer.render(scene, camera);
+                        }
                         ticking = false;
                     });
                     ticking = true;
@@ -236,12 +239,15 @@ window.addEventListener('load', () => {
             });
         } else {
             lenis.on("scroll", ({ scroll, limit }) => {
-                lastScrollPos = scroll / limit;
+                const scrollOffset = Math.max(0, scroll - window.innerHeight); // Subtract 100vh
+                lastScrollPos = scrollOffset / (limit - window.innerHeight);
 
                 if (!ticking) {
                     requestAnimationFrame(() => {
-                        updateTexture(-lastScrollPos);
-                        renderer.render(scene, camera);
+                        if (scroll > window.innerHeight) { // Only render after 100vh
+                            updateTexture(-lastScrollPos);
+                            renderer.render(scene, camera);
+                        }
                         ticking = false;
                     });
                     ticking = true;
@@ -260,7 +266,7 @@ window.addEventListener('load', () => {
             }, 250);
         });
 
-        updateTexture(0);
+        updateTexture(-1);
         renderer.render(scene, camera);
     }
 
