@@ -1,6 +1,9 @@
 window.addEventListener('load', () => {
     let lenis;
     const isMobile = window.innerWidth < 768;
+    let scrollTimeout;
+    let lastScrollY = 0;
+    let scheduledAnimationFrame = false;
 
     if (!isMobile) {
         lenis = new Lenis({
@@ -142,6 +145,7 @@ window.addEventListener('load', () => {
         ]
 
         function updateTexture(offset = 0) {
+            ctx.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
@@ -223,20 +227,28 @@ window.addEventListener('load', () => {
 
         if (isMobile) {
             window.addEventListener("scroll", () => {
-                const scrollOffset = Math.max(0, window.scrollY - window.innerHeight); // Subtract 100vh
-                lastScrollPos = scrollOffset / ((document.documentElement.scrollHeight - window.innerHeight * 2));
+                if (scheduledAnimationFrame) return;
 
-                if (!ticking) {
-                    requestAnimationFrame(() => {
-                        if (window.scrollY > window.innerHeight) { // Only render after 100vh
+                scheduledAnimationFrame = true;
+                requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
+
+                    // Only update if scrolled more than 1px
+                    if (Math.abs(currentScrollY - lastScrollY) > 1) {
+                        const scrollOffset = Math.max(0, currentScrollY - window.innerHeight);
+                        lastScrollPos = scrollOffset / ((document.documentElement.scrollHeight - window.innerHeight * 2));
+
+                        if (currentScrollY > window.innerHeight) {
                             updateTexture(-lastScrollPos);
                             renderer.render(scene, camera);
                         }
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
+
+                        lastScrollY = currentScrollY;
+                    }
+
+                    scheduledAnimationFrame = false;
+                });
+            }, { passive: true }); // Add passive flag
         } else {
             lenis.on("scroll", ({ scroll, limit }) => {
                 const scrollOffset = Math.max(0, scroll - window.innerHeight); // Subtract 100vh
