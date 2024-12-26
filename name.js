@@ -89,12 +89,12 @@ class Particle {
   // Constructor
   constructor (x, y, size) {
     this.r = 20
-    this.size = Math.sqrt(size) * 4 * (0.5 + Math.random() * 0.5) * (viewport.width / 1920)
+    this.size = Math.sqrt(size) * 5 * (0.5 + Math.random() * 0.5) * (viewport.width / 1920)
     this.x = x
     this.y = y
     this.vy = 0
     this.seed = Math.random() * 1000
-    this.freq = (0.5 + Math.random() * 1) * 0.01
+    this.freq = (0.5 + Math.random() * 1) * 0.1
     this.amplitude = (1 - Math.random() * 2) * 0.5
 
     this.color = "hsl(" + Math.random() * 360 + ", 100%, 50%)";
@@ -128,7 +128,7 @@ class Particle {
       this,
       {
         r: this.size,
-        duration: 0.25,
+        duration: 1,
         ease: 'power1.inOut'
       }
     )
