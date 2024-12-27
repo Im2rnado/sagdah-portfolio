@@ -6,6 +6,7 @@
 .about_me_container{
     width: 100%;
     padding: 50px 8% ;
+    overflow: hidden;
 
 }
 .about_me_container .about_me_contents{
@@ -81,4 +82,30 @@ body{
     text-align: justify;
     padding-bottom: 8px;
 }
-
+#animatedtext{
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+}
+#animatedtext.animate{
+    transform: translateX(0);
+    opacity: 1;
+}
+#animatedheader{
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+}
+#animatedheader.animate{
+    transform: translateX(0);
+    opacity: 1;
+}
+#imageanimated{
+    transform: translateX(-200%);
+    opacity: 0;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+}
+#imageanimated.animate{
+    transform: translateX(0);
+    opacity: 1;
+}
