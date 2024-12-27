@@ -207,4 +207,15 @@ a-waves {
                 rgba(0, 0, 0, 0) 65%,
                 rgba(0, 0, 0, 0.6) 100%);
     }
+    
+}
+.nav-links p, .nav-links a {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Makes the text inherit the parent's color */
+    cursor: pointer; /* Makes it appear clickable */
+}
+
+.nav-links a {
+    all: unset; /* Resets link-specific styles */
+    cursor: pointer; /* Adds a pointer cursor for clickable behavior */
 }
