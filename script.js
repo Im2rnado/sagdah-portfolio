@@ -1,8 +1,11 @@
 window.addEventListener('load', () => {
     let lenis;
     const isMobile = window.innerWidth < 768;
-    let lastScrollY = 0;
+    let lastScrollY = window.scrollY;
     let scheduledAnimationFrame = false;
+    let scrollVelocity = 0;
+    const velocityFactor = 0.1;
+    let lastScrollTime = Date.now();
 
     if (!isMobile) {
         lenis = new Lenis({
@@ -28,6 +31,7 @@ window.addEventListener('load', () => {
 
     let images = [];
     let loadedImageCount = 0;
+    let textureUpdateThreshold = 1;
 
     function loadImages() {
         for (let i = 1; i <= 7; i++) {
@@ -225,17 +229,52 @@ window.addEventListener('load', () => {
         }
 
         if (isMobile) {
+            let touchStartY = 0;
+            let lastTouchY = 0;
+
+            window.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+                lastTouchY = touchStartY;
+                scrollVelocity = 0;
+            }, { passive: true });
+
+            // Add touch move handler
+            window.addEventListener('touchmove', (e) => {
+                const currentY = e.touches[0].clientY;
+                const deltaY = lastTouchY - currentY;
+                lastTouchY = currentY;
+
+                const currentTime = Date.now();
+                const deltaTime = currentTime - lastScrollTime;
+                lastScrollTime = currentTime;
+
+                if (deltaTime > 0) {
+                    scrollVelocity = (deltaY / deltaTime) * velocityFactor;
+                }
+            }, { passive: true });
+
+            // Improved scroll handler with momentum
             window.addEventListener("scroll", () => {
                 if (scheduledAnimationFrame) return;
 
                 scheduledAnimationFrame = true;
                 requestAnimationFrame(() => {
                     const currentScrollY = window.scrollY;
+                    const scrollDelta = currentScrollY - lastScrollY;
 
-                    // Only update if scrolled more than 1px
-                    if (Math.abs(currentScrollY - lastScrollY) > 5) {
+                    // Apply velocity-based threshold
+                    const effectiveThreshold = Math.max(
+                        textureUpdateThreshold,
+                        Math.abs(scrollVelocity) * 2
+                    );
+
+                    if (Math.abs(scrollDelta) > effectiveThreshold) {
                         const scrollOffset = Math.max(0, currentScrollY - window.innerHeight);
-                        lastScrollPos = scrollOffset / ((document.documentElement.scrollHeight - window.innerHeight * 2));
+                        const newScrollPos = scrollOffset /
+                            (document.documentElement.scrollHeight - window.innerHeight * 2);
+
+                        // Apply smooth interpolation
+                        lastScrollPos += (newScrollPos - lastScrollPos) * 0.3;
 
                         if (currentScrollY > window.innerHeight) {
                             updateTexture(-lastScrollPos);
@@ -245,9 +284,28 @@ window.addEventListener('load', () => {
                         lastScrollY = currentScrollY;
                     }
 
+                    // Decay scroll velocity
+                    scrollVelocity *= 0.95;
                     scheduledAnimationFrame = false;
-                }, 16);
-            }, { passive: true }); // Add passive flag
+                });
+            }, { passive: true });
+
+            // Add momentum scrolling on touch end
+            window.addEventListener('touchend', () => {
+                let momentum = scrollVelocity;
+
+                function applyMomentum() {
+                    if (Math.abs(momentum) > 0.01) {
+                        lastScrollY += momentum;
+                        momentum *= 0.95; // Decay factor
+                        requestAnimationFrame(applyMomentum);
+                    }
+                }
+
+                if (Math.abs(scrollVelocity) > 0.1) {
+                    requestAnimationFrame(applyMomentum);
+                }
+            }, { passive: true });
         } else {
             lenis.on("scroll", ({ scroll, limit }) => {
                 const scrollOffset = Math.max(0, scroll - window.innerHeight); // Subtract 100vh
