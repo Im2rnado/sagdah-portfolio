@@ -115,7 +115,7 @@ window.addEventListener('load', () => {
             willReadFrequently: false
         });
 
-        const textureDivisor = isMobile ? 2 : 1;
+        const textureDivisor = isMobile ? 1.5 : 1;
         textureCanvas.width = 1024 / textureDivisor;
         textureCanvas.height = 4096 / textureDivisor;
 
@@ -161,7 +161,7 @@ window.addEventListener('load', () => {
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-            const fontSize = isMobile ? 57 : 110;;
+            const fontSize = isMobile ? 74 : 110;;
             ctx.font = `500 ${fontSize}px Dahlia`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
