@@ -1,7 +1,6 @@
 window.addEventListener('load', () => {
     let lenis;
     const isMobile = window.innerWidth < 768;
-    let scrollTimeout;
     let lastScrollY = 0;
     let scheduledAnimationFrame = false;
 
@@ -70,6 +69,7 @@ window.addEventListener('load', () => {
             canvas: document.querySelector('canvas'),
             antialias: true,
             powerPreference: 'high-performance',
+            preserveDrawingBuffer: true,
             stencil: false,
             depth: false
         });
@@ -145,7 +145,6 @@ window.addEventListener('load', () => {
         ]
 
         function updateTexture(offset = 0) {
-            ctx.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
@@ -234,7 +233,7 @@ window.addEventListener('load', () => {
                     const currentScrollY = window.scrollY;
 
                     // Only update if scrolled more than 1px
-                    if (Math.abs(currentScrollY - lastScrollY) > 1) {
+                    if (Math.abs(currentScrollY - lastScrollY) > 5) {
                         const scrollOffset = Math.max(0, currentScrollY - window.innerHeight);
                         lastScrollPos = scrollOffset / ((document.documentElement.scrollHeight - window.innerHeight * 2));
 
