@@ -255,7 +255,7 @@ a-waves {
 /* Responsive Design */
 @media (max-width: 768px) {
     .about_me_contents {
-        margin-top: 10vh;
+        margin-top: 12vh;
         grid-template-columns: 1fr;
         gap: 20px;
     }
