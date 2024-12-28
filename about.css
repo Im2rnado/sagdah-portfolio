@@ -90,6 +90,7 @@ body {
     font-family: "Inter";
     text-align: justify;
     padding-bottom: 8px;
+    cursor: none;
 }
 
 /* Animations */
