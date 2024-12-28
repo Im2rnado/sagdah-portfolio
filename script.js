@@ -246,7 +246,7 @@ window.addEventListener('load', () => {
                     }
 
                     scheduledAnimationFrame = false;
-                });
+                }, 16);
             }, { passive: true }); // Add passive flag
         } else {
             lenis.on("scroll", ({ scroll, limit }) => {
