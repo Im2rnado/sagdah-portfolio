@@ -213,7 +213,7 @@ window.addEventListener('load', () => {
 
                     ctx.shadowColor = "black";
                     ctx.shadowBlur = 90;
-                    ctx.fillStyle = "white";
+                    ctx.fillStyle = "#fff";
                     ctx.fillText(
                         slideTitles[slideIndex],
                         textureCanvas.width / 2,

@@ -360,8 +360,8 @@ class AWaves extends HTMLElement {
     const { mouse } = this
 
     // Smooth mouse movement
-    mouse.sx += (mouse.x - mouse.sx) * 0.1
-    mouse.sy += (mouse.y - mouse.sy) * 0.1
+    mouse.sx += (mouse.x - mouse.sx) * 0.12
+    mouse.sy += (mouse.y - mouse.sy) * 0.12
 
     // Mouse velocity
     const dx = mouse.x - mouse.lx

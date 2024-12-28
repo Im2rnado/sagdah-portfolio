@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: none;
 }
 
 html,
@@ -13,14 +14,18 @@ body {
     color: #fff;
 }
 
-p {
-    font-size: larger;
+p,
+a {
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.5;
     opacity: 0.5;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
 }
 
-p#logo {
+#logo {
     font-family: 'Dahlia';
     font-size: 40px;
     opacity: 1;
@@ -36,11 +41,13 @@ nav {
     align-items: center;
     z-index: 20;
     margin-top: -20px;
+    cursor: default;
 }
 
 .nav-links {
     display: flex;
     gap: 2em;
+    cursor: default;
 }
 
 footer {
@@ -120,7 +127,7 @@ a-waves {
         width: 0.5rem;
         height: 0.5rem;
 
-        background: white;
+        background: #fff;
         border-radius: 50%;
 
         transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0);
@@ -152,7 +159,7 @@ a-waves {
     overflow: hidden;
 
     rect {
-        fill: white;
+        fill: #fff;
     }
 
     mask {
@@ -186,7 +193,8 @@ a-waves {
         gap: 1em;
     }
 
-    p {
+    p,
+    a {
         font-size: 15px;
     }
 
@@ -201,21 +209,4 @@ a-waves {
     .shadow-overlay {
         height: 25vh;
     }
-
-    .overlay {
-        background: radial-gradient(circle,
-                rgba(0, 0, 0, 0) 65%,
-                rgba(0, 0, 0, 0.6) 100%);
-    }
-    
-}
-.nav-links p, .nav-links a {
-    text-decoration: none; /* Removes underline */
-    color: inherit; /* Makes the text inherit the parent's color */
-    cursor: pointer; /* Makes it appear clickable */
-}
-
-.nav-links a {
-    all: unset; /* Resets link-specific styles */
-    cursor: pointer; /* Adds a pointer cursor for clickable behavior */
 }
