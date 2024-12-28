@@ -71,15 +71,22 @@ window.addEventListener('load', () => {
 
         const renderer = new THREE.WebGLRenderer({
             canvas: document.querySelector('canvas'),
-            antialias: true,
+            antialias: false,
             powerPreference: 'high-performance',
-            preserveDrawingBuffer: true,
+            preserveDrawingBuffer: false,
             stencil: false,
-            depth: false
+            depth: false,
+            alpha: false
         });
+
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
         renderer.setClearColor(0x000000);
+
+        // Enable WebGL optimizations
+        renderer.info.autoReset = false;
+        const gl = renderer.getContext();
+        gl.getExtension('WEBGL_lose_context');
 
         const parentWidth = isMobile ? 10 : 20;
         const parentHeight = isMobile ? 37.5 : 75;
@@ -105,10 +112,12 @@ window.addEventListener('load', () => {
         const textureCanvas = document.createElement('canvas');
         const ctx = textureCanvas.getContext('2d', {
             alpha: false,
-            willReadFrequently: false,
+            willReadFrequently: false
         });
-        textureCanvas.width = 1024;
-        textureCanvas.height = 4096;
+
+        const textureDivisor = isMobile ? 2 : 1;
+        textureCanvas.width = 1024 / textureDivisor;
+        textureCanvas.height = 4096 / textureDivisor;
 
         const texture = new THREE.CanvasTexture(textureCanvas);
         texture.generateMipmaps = false;
@@ -116,7 +125,7 @@ window.addEventListener('load', () => {
         texture.wrapT = THREE.RepeatWrapping;
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
-        texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+        texture.anisotropy = isMobile ? 1 : Math.min(4, renderer.capabilities.getMaxAnisotropy());
 
         const parentMaterial = new THREE.MeshBasicMaterial({
             map: texture,
@@ -152,7 +161,7 @@ window.addEventListener('load', () => {
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-            const fontSize = 110;
+            const fontSize = isMobile ? 57 : 110;;
             ctx.font = `500 ${fontSize}px Dahlia`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -330,8 +339,14 @@ window.addEventListener('load', () => {
             resizeTimeout = setTimeout(() => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                const newWidth = window.innerWidth;
+                const newHeight = window.innerHeight;
+                renderer.setSize(newWidth, newHeight);
+                renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+
+                updateTexture(-lastScrollPos);
+                renderer.render(scene, camera);
             }, 250);
         });
 
