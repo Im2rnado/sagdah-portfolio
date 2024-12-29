@@ -6,6 +6,7 @@ window.addEventListener('load', () => {
     let scrollVelocity = 0;
     const velocityFactor = 0.1;
     let lastScrollTime = Date.now();
+    const lerp = (start, end, t) => start * (1 - t) + end * t;
 
     if (!isMobile) {
         lenis = new Lenis({
@@ -40,7 +41,7 @@ window.addEventListener('load', () => {
             console.log(`Attempting to load: ${img.src}`); // Debug log
 
             img.onload = function () {
-                images.push(img);
+                images[i - 1] = img;
                 loadedImageCount++;
                 console.log(`Successfully loaded image ${i}, count: ${loadedImageCount}`);
 
@@ -150,12 +151,26 @@ window.addEventListener('load', () => {
         const slideTitles = [
             "SFX Makeup",
             "Worlwide Magazine",
-            "Fashion\nEditorial",
-            "Fashion\nEditorial",
+            "Fashion Editorial",
+            "Fashion Editorial",
             "SFX Makeup",
-            "Fashion\nEditorial",
+            "Fashion Editorial",
             "Local Brand",
         ]
+
+        const slideDescriptions = [
+            "Halloween Makeup For Salma",
+            "Makeup for Vogue Magazine",
+            "Fashion Magazine Makeup",
+            "Fashion Magazine Makeup",
+            "Halloween Makeup for Karma",
+            "Fashion Magazine Makeup",
+            "Sagshop Local Brand Makeup",
+        ]
+
+        let currentOpacity = 0;
+        let currentScale = 0;
+        const animationSpeed = 0.02;
 
         function updateTexture(offset = 0) {
             ctx.fillStyle = "#000";
@@ -222,15 +237,44 @@ window.addEventListener('load', () => {
                     }
 
                     ctx.restore();
+                    ctx.save();
+
+                    // Calculate distance from center
+                    const viewportCenter = textureCanvas.height / 2;
+                    const slideCenter = wrappedY + slideRect.height / 2;
+                    const distanceFromCenter = Math.abs(viewportCenter - slideCenter);
+                    const maxDistance = textureCanvas.height / 4;
+                    // Calculate distance based on distance
+                    const distance = Math.max(0, 1 - (distanceFromCenter / maxDistance));
+
+                    currentOpacity = lerp(currentOpacity, distance, animationSpeed);
+                    currentScale = lerp(currentScale, distance > 0.78 ? 5 : 0, animationSpeed);
 
                     ctx.shadowColor = "black";
-                    ctx.shadowBlur = 90;
+                    ctx.shadowBlur = 20;
                     ctx.fillStyle = "#fff";
+                    const fontSize = isMobile ? 74 : 110;;
+                    ctx.font = `500 ${fontSize}px Dahlia`;
                     ctx.fillText(
                         slideTitles[slideIndex],
                         textureCanvas.width / 2,
                         wrappedY + slideRect.height / 2,
                     );
+                    
+                    if (distance > 0.78) {
+                        ctx.font = `400 ${fontSize * 0.4}px Inter`;
+                        ctx.transform(
+                            currentScale, 0, 0, currentScale,
+                            textureCanvas.width / 2 * (1 - currentScale),
+                            (wrappedY + slideRect.height * 0.7) * (1 - currentScale)
+                        );
+                        ctx.fillText(
+                            slideDescriptions[slideIndex],
+                            textureCanvas.width / 2,
+                            wrappedY + slideRect.height * 0.7
+                        );
+                    }
+                    ctx.restore();
                 }
             }
 

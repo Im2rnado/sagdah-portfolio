@@ -97,19 +97,19 @@ body {
 #animatedtext {
     transform: translateX(100%);
     opacity: 0;
-    transition: transform 1.3s ease-out, opacity 1.3s ease-out;
+    transition: transform 0.7s ease-out, opacity 1s ease-out;
 }
 
 #animatedheader {
     transform: translateX(100%);
     opacity: 0;
-    transition: transform 1s ease-out, opacity 1s ease-out;
+    transition: transform 0.7s ease-out, opacity 1s ease-out;
 }
 
 #imageanimated {
     transform: translateX(100%);
     opacity: 0;
-    transition: transform 1.7s ease-out, opacity 1.7s ease-out;
+    transition: transform 1.2s ease-out, opacity 1.5s ease-out;
 }
 
 #imageanimated {
