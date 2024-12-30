@@ -116,7 +116,7 @@ window.addEventListener('load', () => {
             willReadFrequently: false
         });
 
-        const textureDivisor = isMobile ? 1.5 : 1;
+        const textureDivisor = isMobile ? 1.4 : 1;
         textureCanvas.width = 1024 / textureDivisor;
         textureCanvas.height = 4096 / textureDivisor;
 
@@ -176,7 +176,7 @@ window.addEventListener('load', () => {
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-            const fontSize = isMobile ? 74 : 110;;
+            const fontSize = isMobile ? 78 : 110;;
             ctx.font = `500 ${fontSize}px Dahlia`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -252,7 +252,7 @@ window.addEventListener('load', () => {
                     currentScale = lerp(currentScale, distance > distanceToCalculate ? 6 : 0, animationSpeed);
 
                     ctx.shadowColor = "black";
-                    ctx.shadowBlur = isMobile ? 80 : 20;
+                    ctx.shadowBlur = isMobile ? 90 : 20;
                     ctx.fillStyle = "#fff";
                     const fontSize = isMobile ? 74 : 110;;
                     ctx.font = `500 ${fontSize}px Dahlia`;
