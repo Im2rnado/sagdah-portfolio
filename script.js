@@ -116,7 +116,7 @@ window.addEventListener('load', () => {
             willReadFrequently: false
         });
 
-        const textureDivisor = isMobile ? 1.4 : 1;
+        const textureDivisor = isMobile ? 1.1 : 1;
         textureCanvas.width = 1024 / textureDivisor;
         textureCanvas.height = 4096 / textureDivisor;
 
@@ -170,13 +170,13 @@ window.addEventListener('load', () => {
 
         let currentOpacity = 0;
         let currentScale = 0;
-        const animationSpeed = isMobile ? 0.003 : 0.004;
+        const animationSpeed = isMobile ? 0.0028 : 0.004;
 
         function updateTexture(offset = 0) {
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-            const fontSize = isMobile ? 78 : 110;;
+            const fontSize = isMobile ? 100 : 110;;
             ctx.font = `500 ${fontSize}px Dahlia`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -240,11 +240,11 @@ window.addEventListener('load', () => {
                     ctx.save();
 
                     // Calculate distance from center
-                    const viewportCenter = isMobile ? textureCanvas.height / 2 : textureCanvas.height / 2.1;
+                    const viewportCenter = textureCanvas.height / 2.1;
                     const slideCenter = wrappedY + slideRect.height / 2;
                     const distanceFromCenter = Math.abs(viewportCenter - slideCenter);
                     const maxDistance = textureCanvas.height / 4;
-                    const distanceToCalculate = isMobile ? 0.75 : 0.79
+                    const distanceToCalculate = isMobile ? 0.72 : 0.79
                     // Calculate distance based on distance
                     const distance = Math.max(0, 1 - (distanceFromCenter / maxDistance));
 
@@ -252,9 +252,9 @@ window.addEventListener('load', () => {
                     currentScale = lerp(currentScale, distance > distanceToCalculate ? 6 : 0, animationSpeed);
 
                     ctx.shadowColor = "black";
-                    ctx.shadowBlur = isMobile ? 90 : 20;
+                    ctx.shadowBlur = 20;
                     ctx.fillStyle = "#fff";
-                    const fontSize = isMobile ? 74 : 110;;
+                    const fontSize = isMobile ? 100 : 110;;
                     ctx.font = `500 ${fontSize}px Dahlia`;
                     ctx.fillText(
                         slideTitles[slideIndex],
