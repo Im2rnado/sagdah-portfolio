@@ -170,7 +170,7 @@ window.addEventListener('load', () => {
 
         let currentOpacity = 0;
         let currentScale = 0;
-        const animationSpeed = 0.02;
+        const animationSpeed = isMobile ? 0.003 : 0.004;
 
         function updateTexture(offset = 0) {
             ctx.fillStyle = "#000";
@@ -240,18 +240,19 @@ window.addEventListener('load', () => {
                     ctx.save();
 
                     // Calculate distance from center
-                    const viewportCenter = textureCanvas.height / 2;
+                    const viewportCenter = isMobile ? textureCanvas.height / 2 : textureCanvas.height / 2.1;
                     const slideCenter = wrappedY + slideRect.height / 2;
                     const distanceFromCenter = Math.abs(viewportCenter - slideCenter);
                     const maxDistance = textureCanvas.height / 4;
+                    const distanceToCalculate = isMobile ? 0.75 : 0.79
                     // Calculate distance based on distance
                     const distance = Math.max(0, 1 - (distanceFromCenter / maxDistance));
 
                     currentOpacity = lerp(currentOpacity, distance, animationSpeed);
-                    currentScale = lerp(currentScale, distance > 0.78 ? 5 : 0, animationSpeed);
+                    currentScale = lerp(currentScale, distance > distanceToCalculate ? 6 : 0, animationSpeed);
 
                     ctx.shadowColor = "black";
-                    ctx.shadowBlur = 20;
+                    ctx.shadowBlur = isMobile ? 80 : 20;
                     ctx.fillStyle = "#fff";
                     const fontSize = isMobile ? 74 : 110;;
                     ctx.font = `500 ${fontSize}px Dahlia`;
@@ -261,8 +262,8 @@ window.addEventListener('load', () => {
                         wrappedY + slideRect.height / 2,
                     );
                     
-                    if (distance > 0.78) {
-                        ctx.font = `400 ${fontSize * 0.4}px Inter`;
+                    if (distance > distanceToCalculate) {
+                        ctx.font = `400 ${fontSize * 0.6}px Inter`;
                         ctx.transform(
                             currentScale, 0, 0, currentScale,
                             textureCanvas.width / 2 * (1 - currentScale),
