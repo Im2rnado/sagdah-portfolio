@@ -252,7 +252,7 @@ window.addEventListener('load', () => {
                     currentScale = lerp(currentScale, distance > distanceToCalculate ? 6 : 0, animationSpeed);
 
                     ctx.shadowColor = "black";
-                    ctx.shadowBlur = 20;
+                    ctx.shadowBlur = isMobile ? 2 : 20;
                     ctx.fillStyle = "#fff";
                     const fontSize = isMobile ? 100 : 110;;
                     ctx.font = `500 ${fontSize}px Dahlia`;
