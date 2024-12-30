@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
     let lastScrollY = window.scrollY;
     let scheduledAnimationFrame = false;
     let scrollVelocity = 0;
-    const velocityFactor = 0.1;
+    const velocityFactor = 1;
     let lastScrollTime = Date.now();
     const lerp = (start, end, t) => start * (1 - t) + end * t;
 
@@ -32,7 +32,6 @@ window.addEventListener('load', () => {
 
     let images = [];
     let loadedImageCount = 0;
-    let textureUpdateThreshold = 1;
 
     function loadImages() {
         for (let i = 1; i <= 7; i++) {
@@ -89,9 +88,9 @@ window.addEventListener('load', () => {
         const gl = renderer.getContext();
         gl.getExtension('WEBGL_lose_context');
 
-        const parentWidth = isMobile ? 10 : 20;
-        const parentHeight = isMobile ? 37.5 : 75;
-        const curvature = isMobile ? 25 : 35;
+        const parentWidth = isMobile ? 14 : 20;
+        const parentHeight = isMobile ? 52 : 75;
+        const curvature = 45;
         const segmentsX = 200;
         const segmentsY = 200;
 
@@ -111,14 +110,19 @@ window.addEventListener('load', () => {
         const cycleHeight = totalSlides * (slideHeight + gap);
 
         const textureCanvas = document.createElement('canvas');
+        const ratio = window.devicePixelRatio;
+
+        const textureDivisor = isMobile ? 2 : 1;
+        textureCanvas.style.width = (1024 / ratio) + "px";
+        textureCanvas.style.height = (4096 / ratio) + "px";
+        textureCanvas.width = (1024 / ratio);
+        textureCanvas.height = (4096 / ratio);
+
         const ctx = textureCanvas.getContext('2d', {
             alpha: false,
             willReadFrequently: false
         });
-
-        const textureDivisor = isMobile ? 1.1 : 1;
-        textureCanvas.width = 1024 / textureDivisor;
-        textureCanvas.height = 4096 / textureDivisor;
+        isMobile ?? ctx.scale(ratio / textureDivisor, ratio / textureDivisor);
 
         const texture = new THREE.CanvasTexture(textureCanvas);
         texture.generateMipmaps = false;
@@ -139,14 +143,14 @@ window.addEventListener('load', () => {
         parentMesh.rotation.y = THREE.MathUtils.degToRad(20);
         scene.add(parentMesh);
 
-        const distance = 17.5;
+        const distance = isMobile ? 20 : 17.5;
         const heightOffset = 5;
         const offsetX = distance * Math.sin(THREE.MathUtils.degToRad(20));
         const offsetZ = distance * Math.cos(THREE.MathUtils.degToRad(20));
 
         camera.position.set(offsetX, heightOffset, offsetZ);
         camera.lookAt(0, -2, 0);
-        camera.rotation.z = THREE.MathUtils.degToRad(-5);
+        camera.rotation.z = THREE.MathUtils.degToRad(isMobile ? -4 : -5);
 
         const slideTitles = [
             "SFX Makeup",
@@ -170,18 +174,17 @@ window.addEventListener('load', () => {
 
         let currentOpacity = 0;
         let currentScale = 0;
-        const animationSpeed = isMobile ? 0.0028 : 0.004;
+        const animationSpeed = isMobile ? 0.003 : 0.005;
 
         function updateTexture(offset = 0) {
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, textureCanvas.width, textureCanvas.height);
 
-            const fontSize = isMobile ? 100 : 110;;
-            ctx.font = `500 ${fontSize}px Dahlia`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
             for (let i = 0; i < totalSlides; i++) {
+                ctx.shadowBlur = 0;
                 let slideY = i * (slideHeight + gap);
                 slideY += offset * cycleHeight;
 
@@ -249,12 +252,12 @@ window.addEventListener('load', () => {
                     const distance = Math.max(0, 1 - (distanceFromCenter / maxDistance));
 
                     currentOpacity = lerp(currentOpacity, distance, animationSpeed);
-                    currentScale = lerp(currentScale, distance > distanceToCalculate ? 6 : 0, animationSpeed);
+                    currentScale = lerp(currentScale, distance > distanceToCalculate ? 3 : 0, animationSpeed);
 
                     ctx.shadowColor = "black";
-                    ctx.shadowBlur = isMobile ? 2 : 20;
+                    ctx.shadowBlur = 20;
                     ctx.fillStyle = "#fff";
-                    const fontSize = isMobile ? 100 : 110;;
+                    const fontSize = isMobile ? 55 : 90;;
                     ctx.font = `500 ${fontSize}px Dahlia`;
                     ctx.fillText(
                         slideTitles[slideIndex],
@@ -263,7 +266,7 @@ window.addEventListener('load', () => {
                     );
                     
                     if (distance > distanceToCalculate) {
-                        ctx.font = `400 ${fontSize * 0.6}px Inter`;
+                        ctx.font = `400 ${fontSize * 0.7}px Inter`;
                         ctx.transform(
                             currentScale, 0, 0, currentScale,
                             textureCanvas.width / 2 * (1 - currentScale),
@@ -303,43 +306,33 @@ window.addEventListener('load', () => {
                 lastScrollTime = currentTime;
 
                 if (deltaTime > 0) {
-                    scrollVelocity = (deltaY / deltaTime) * velocityFactor;
+                    // Reduce velocity factor on mobile to prevent dramatic changes
+                    scrollVelocity = (deltaY / deltaTime) * (velocityFactor * 0.5);
                 }
+
             }, { passive: true });
 
             // Improved scroll handler with momentum
             window.addEventListener("scroll", () => {
-                if (scheduledAnimationFrame) return;
+                if (scheduledAnimationFrame) return;    
 
                 scheduledAnimationFrame = true;
                 requestAnimationFrame(() => {
                     const currentScrollY = window.scrollY;
-                    const scrollDelta = currentScrollY - lastScrollY;
+                    const viewportHeight = window.innerHeight;
+                    const documentHeight = document.documentElement.scrollHeight;
 
-                    // Apply velocity-based threshold
-                    const effectiveThreshold = Math.max(
-                        textureUpdateThreshold,
-                        Math.abs(scrollVelocity) * 2
-                    );
+                    if (currentScrollY > viewportHeight) {
+                        // Calculate scroll position without affecting camera perspective
+                        const scrollProgress = (currentScrollY - viewportHeight) /
+                            (documentHeight - viewportHeight * 2);
+                        const clampedProgress = Math.max(0, Math.min(1, scrollProgress));
 
-                    if (Math.abs(scrollDelta) > effectiveThreshold) {
-                        const scrollOffset = Math.max(0, currentScrollY - window.innerHeight);
-                        const newScrollPos = scrollOffset /
-                            (document.documentElement.scrollHeight - window.innerHeight * 2);
-
-                        // Apply smooth interpolation
-                        lastScrollPos += (newScrollPos - lastScrollPos) * 0.3;
-
-                        if (currentScrollY > window.innerHeight) {
-                            updateTexture(-lastScrollPos);
-                            renderer.render(scene, camera);
-                        }
-
-                        lastScrollY = currentScrollY;
+                        updateTexture(-clampedProgress);
+                        renderer.render(scene, camera);
                     }
 
-                    // Decay scroll velocity
-                    scrollVelocity *= 0.95;
+                    lastScrollY = currentScrollY;
                     scheduledAnimationFrame = false;
                 });
             }, { passive: true });
@@ -378,22 +371,7 @@ window.addEventListener('load', () => {
             });
         }
 
-        let resizeTimeout;
-        window.addEventListener("resize", () => {
-            if (resizeTimeout) clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-
-                const newWidth = window.innerWidth;
-                const newHeight = window.innerHeight;
-                renderer.setSize(newWidth, newHeight);
-                renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
-
-                updateTexture(-lastScrollPos);
-                renderer.render(scene, camera);
-            }, 250);
-        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
         updateTexture(-1);
         renderer.render(scene, camera);
