@@ -1,15 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Text Animation</title>
-  <link rel="stylesheet" href="conact.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="./contact.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" 
+        rel="stylesheet">
 </head>
+
 <body>
-  <div class="container">
-    <h1 id="animated-text">Welcome to My Website</h1>
-  </div>
-  <script src="contact.js"></script>
+    <div class="shadow-overlay top"></div>
+    <div class="shadow-overlay bottom"></div>
+
+    <nav>
+        <div class="site-info">
+            <a href="index.html" id="logo">Sagdah</a>
+            <p>Makeup Artist</p>
+        </div>
+        <div class="nav-links">
+            <a href="./index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="./contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <div class="personalInfo" id="personalInfoanimation">
+        <div>
+            <span>Name:</span>
+            <span>Sagdah Elshamy</span>
+        </div>
+        <div>
+            <span>Age:</span>
+            <span>18</span>
+        </div>
+        <div>
+            <span>Email:</span>
+            <span>sagdahelshamy@gmail.com</span>
+        </div>
+        <div>
+            <span>Phone Number:</span>
+            <span>01229519843</span>
+        </div>
+    </div>
+
+    <a-waves>
+        <svg class="js-svg"></svg>
+    </a-waves>
+
+    <footer>
+        <p>Agency</p>
+        <p>&copy; 2025</p>
+    </footer>
+
+    <script src="./contact.js"></script>
+    <script src="./waves.js"></script>
 </body>
+
 </html>
