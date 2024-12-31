@@ -174,22 +174,22 @@ a-waves {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .about_me_contents {
+    .personalInfo {
         margin-top: 12vh;
         grid-template-columns: 1fr;
         gap: 20px;
     }
 
-    .imageSection {
+    .photo-section {
         height: 300px;
         margin-bottom: 2vh;
     }
 
-    .infoSection h1 {
+    .personalInfo h1 {
         font-size: 24px;
     }
 
-    .infoSection p {
+    .personalInfo p {
         font-size: 16px;
         margin-bottom: 10vh;
     }
